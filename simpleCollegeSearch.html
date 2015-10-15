@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Bay Area Colleges and Universities</title>
+		<style type="text/css">
+			.panel1 {
+				margin: auto;
+				float: left;
+				overflow: hidden;
+			}
+			.panel2 {
+				margin-left: 30px;
+				float: left;
+				overflow: hidden;
+			}
+			table, th, td {
+				font-family: Helvetica, Arial, sans-serif;
+			}
+			#dataTable, #dataTable td {
+				border: 1px solid black;
+				border-collapse: collapse;
+			}
+			#search {
+				border: 1px solid black;
+			}
+			th, td {
+				padding: 3px;
+			}
+			th {
+				color: white;
+				background-color: black;
+			}
+			.button {
+				margin-top: 20px;
+			}
+			.thinsideborder {
+				border-right: 1px solid white;
+			}
+			tr:nth-child(odd) {
+				background-color: #EEE;
+			}
+			tr:nth-child(even) {
+				background-color: white;
+			}
+
+		</style>
+		<script>
+			var univArray = [
+				{name: "Stanford University", nickname: "Stanford", ownership: "private", SATh: 1570, SATl: 1380, tuition: 44757},
+				{name: "University of California, Berkeley", nickname: "UC Berkeley", ownership: "public", SATh: 1500, SATl: 1250, tuition: 13844},
+				{name: "University of California, Santa Cruz", nickname: "UC Santa Cruz", ownership: "public", SATh: 1280, SATl: 1000, tuition: 13398},
+				{name: "San Francisco State University", nickname: "SFSU", ownership: "public", SATh: 1110, SATl: 880, tuition: 6468},
+				{name: "San Jose State University", nickname: "SJSU", ownership: "public", SATh: 1160, SATl: 880, tuition: 9496},
+				{name: "Sonoma State University", nickname: "Sonoma State", ownership: "public", SATh: 1090, SATl: 880, tuition: 7276},
+				{name: "California State University, East Bay", nickname: "CalState East Bay", ownership: "public", SATh: 1010, SATl: 800, tuition: 6550},
+				{name: "University of San Francisco", nickname: "USF", ownership: "private", SATh: 1270, SATl: 1070, tuition: 41450},
+				{name: "Santa Clara University", nickname: "SCU", ownership: "private", SATh: 1380, SATl: 1190, tuition: 43812},
+				{name: "Mills College", nickname: "Mills College", ownership: "private", SATh: 1250, SATl: 1040, tuition: 42918}
+			];
+
+			function findSchools() {
+				var publicElement = document.getElementById("public");
+				//console.log(publicElement)
+				var privateElement = document.getElementById("private");
+				//console.log(privateElement)
+				var dontcareElement = document.getElementById("dontcare");
+				//console.log(dontcareElement)
+
+				var maxtuitionElement = document.getElementById("maxtuition");
+				//console.log(maxtuitionElement)
+				var maxhighsatElement = document.getElementById("maxhighsat");
+				//console.log(maxhighsatElement)
+				var minlowsatElement = document.getElementById("minlowsat")
+				//console.log(minlowsatElement)
+
+				var maxtuition = parseInt(maxtuitionElement.value);
+				//console.log(maxtuition)
+				var maxhighsat = parseInt(maxhighsatElement.value);
+				//console.log(maxhighsat)
+				var minlowsat = parseInt(minlowsatElement.value);
+				//console.log(minlowsat)
+				
+				if (maxtuitionElement.value == "") {maxtuition = 100000000000};
+				//console.log(maxtuition);
+				if (maxhighsatElement.value == "") {maxhighsat = 5000};
+				//console.log(maxhighsat);
+				if (minlowsatElement.value == "") {minlowsat = 0};
+				//console.log(minlowsat);
+
+				var matchedArray = [];
+
+				// this delete rows code below completed with the help of John and a student he was helping.
+				var table = document.getElementById("dataTable");
+				var numberOfRows = table.rows.length;
+				//console.log(numberOfRows);
+				for (var i = numberOfRows - 1; i > 0; i--) {
+					table.deleteRow(i);
+				}
+
+				for (var i = 0; i < univArray.length; i++) {
+					if ( (dontcareElement.checked) || 
+						 (publicElement.checked && univArray[i].ownership == "public") ||
+						 (privateElement.checked && univArray[i].ownership == "private") ) {
+							//if ( (maxtuition == "" || (maxtuition > univArray[i].tuition) && .... ) {
+							if ( (maxtuition >= univArray[i].tuition) && 
+								 (maxhighsat >= univArray[i].SATh) && 
+								 (minlowsat <= univArray[i].SATl) ) {
+									matchedArray.push([univArray[i].nickname, univArray[i].SATh, univArray[i].SATl, univArray[i].tuition]);
+									//console.log(matchedArray);
+							};			
+					};
+				};
+
+				var table = document.getElementById("dataTable");
+				//console.log(table);
+				for (var i=0; i<matchedArray.length; i++) {
+					var values = matchedArray[i];
+					var row = document.createElement("tr");
+					for (var j = 0; j < values.length; j++) {
+						//console.log(values);
+						var cell = document.createElement("td");
+						var text = document.createTextNode(values[j]);
+						cell.appendChild(text);
+						row.appendChild(cell);
+						dataTable.appendChild(row);
+					};		
+				};
+			};
+
+		</script>
+		
+	</head>
+	<body>
+		<h1>Bay Area Colleges and Universities</h1>
+
+		<div class="panel1">
+			<table id="dataTable">
+				<tr>
+					<th class="thinsideborder">Name</th>
+					<th class="thinsideborder">SAT High</th>
+					<th class="thinsideborder">SAT Low</th>
+					<th>Tuition</th>
+				</tr>
+			</table>
+		</div>
+
+		<div class="panel2">
+			<table id="search">
+				<tr>
+					<th colspan="6">Search Criteria</th>
+				</tr>
+				<tr>
+					<td class="radio"><input type="radio" name="radio" id="public" value="public"></td>
+					<td class="label"><label for="public">Public</td>
+					
+					<td class="radio"><input type="radio" name="radio" id="private" value="private"></td>
+					<td class="label"><label for="private">Private</td>
+
+					<td class="radio"><input type="radio" name="radio" id="dontcare" checked="checked" value="dontcare"></td>
+					<td class="label"><label for="dontcare">Don't Care</td>
+				</tr>
+				<tr>
+					<td class="label" colspan="4"><label for="maxtuition">Maximum Tuition<br>leave blank for don't care</td>
+					<td colspan="5"><input type="text" size="20" value="" id="maxtuition"></td>
+				</tr>
+				<tr>
+					<td class="label" colspan="4"><label for="maxtuition">Maximum High SAT<br>leave blank for don't care</td>
+					<td colspan="5"><input type="text" size="20" value="" id="maxhighsat"></td>
+				</tr>
+				<tr>
+					<td class="label" colspan="4"><label for="maxtuition">Minimum Low SAT<br>leave blank for don't care</td>
+					<td colspan="5"><input type="text" size="20" value="" id="minlowsat"></td>
+				</tr>
+			</table>
+
+			<div class="button">
+				<input type="button" id="update" value="Update" onclick="findSchools();">
+			</div>
+		</div>
+
+	</body>
+</html>
